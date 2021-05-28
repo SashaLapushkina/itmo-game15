@@ -12,8 +12,7 @@ public class Game15 implements ActionListener{
     JFrame frame = new JFrame();
 
     public static void main(String[] args) {
-        Game15 game = new Game15();
-        game.newGame();
+        new Game15();
 
     }
 
@@ -69,7 +68,17 @@ public class Game15 implements ActionListener{
     }
 
     private void newGame() { //перемешать массив
+        new Game15();
+        shuffle();
+    }
+
+    private void shuffle() {
         Collections.shuffle(cells);
+        int temp = cells.get(15);
+        if (temp != 0) {
+            cells.set(cells.indexOf(0), temp);
+            cells.set(15, 0);
+        }
     }
 
     private void exitGame() { //перемешать массив
