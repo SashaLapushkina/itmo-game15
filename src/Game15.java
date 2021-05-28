@@ -1,49 +1,65 @@
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.event.MenuDragMouseListener;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
+import javax.swing.event.MouseInputListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class Game15 implements ActionListener{
     static int size = 300;
-    ArrayList<Integer> cells = new ArrayList<Integer>();
+    ArrayList<JLabel> cells = new ArrayList<JLabel>();
     JFrame frame = new JFrame();
+    JPanel panel = new JPanel();
 
     public static void main(String[] args) {
         new Game15();
-
     }
 
     Game15() {
-        for (int i = 0; i < 15; i++) { //Заполняем массив
-            cells.add(i + 1);
-        }
-        cells.add(0);
-        frame();
-    }
-
-    private void frame() {
         frame.setTitle("Пятнашки");
         frame.setSize(size, size);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
-        frame.setJMenuBar(menu());
-        frame.setLayout(grid());
+        frame.add(panel);
+        drawMenu();
+
+        for (int i = 0; i < 16; i++) { //Заполняем массив
+            cells.add(new JLabel(String.valueOf(i + 1), SwingConstants.CENTER));
+            cells.get(i).setBorder(new LineBorder(Color.BLACK, 1));
+            cells.get(i).setFont(new Font("Arial", Font.PLAIN, size / 32 * 5));
+        }
+        cells.get(15).setText("");
+
+        newGame();
+
         frame.setVisible(true);
     }
 
-    private JMenuBar menu() {
+    //Отображение меню
+    private void drawMenu() {
         JMenuBar bar = new JMenuBar();
 
         JMenu file = new JMenu("File", true);
+        file.setMnemonic(KeyEvent.VK_F);
+
         JMenuItem newGame = new JMenuItem("New");
+        newGame.setMnemonic(KeyEvent.VK_N);
+        newGame.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK));
+
         JMenuItem exitGame = new JMenuItem("Exit");
+        exitGame.setMnemonic(KeyEvent.VK_E);
+        exitGame.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK));
+
         file.add(newGame);
+        file.addSeparator();
         file.add(exitGame);
 
-        JMenu about = new JMenu("About", true);
+        JMenu about = new JMenu("About");
+        about.setMnemonic(KeyEvent.VK_A);
 
         bar.add(file);
         bar.add(about);
@@ -52,33 +68,38 @@ public class Game15 implements ActionListener{
         exitGame.addActionListener(this);
         about.addActionListener(this);
 
-
-        return bar;
+        frame.setJMenuBar(bar);
     }
 
-    private GridLayout grid() {
+    //Отображение сетки
+    private void drawGrid() {
+        panel.removeAll();
         GridLayout grid = new GridLayout(4, 4);
-        for (int x: cells) {
-                JLabel label = new JLabel(x == 0 ? "" : String.valueOf(x), SwingConstants.CENTER); //Не рисуем 0, центрируем текст
-                label.setBorder(new LineBorder(Color.BLACK, 1));
-                label.setFont(new Font("Arial", Font.PLAIN, size / 32 * 5));
-                frame.add(label);
+        panel.setLayout(grid);
+        for (JLabel x: cells) {
+                JLabel label = new JLabel(x.getText(), SwingConstants.CENTER);
+                panel.add(x);
         }
-        return grid;
     }
 
-    private void newGame() { //перемешать массив
-        new Game15();
-        shuffle();
-    }
-
+    //Перемешать элементы в массиве
     private void shuffle() {
         Collections.shuffle(cells);
-        int temp = cells.get(15);
-        if (temp != 0) {
-            cells.set(cells.indexOf(0), temp);
-            cells.set(15, 0);
+        int i = 0;
+        if (cells.get(15).getText() != "") {
+            String str = cells.get(15).getText();
+            while (i < 15 && cells.get(i).getText() != "") {
+                i++;
+            }
+            cells.get(i).setText(cells.get(15).getText());
+            cells.get(15).setText("");
         }
+    }
+
+    //Начать иновую игру
+    private void newGame() {
+        shuffle();
+        drawGrid();
     }
 
     private void exitGame() { //перемешать массив
@@ -86,8 +107,8 @@ public class Game15 implements ActionListener{
     }
 
     @Override
-    public void actionPerformed(ActionEvent ae) {
-        String command = ae.getActionCommand();
+    public void actionPerformed(ActionEvent e) {
+        String command = e.getActionCommand();
         switch (command) {
             case "New" :
                newGame();
@@ -95,9 +116,9 @@ public class Game15 implements ActionListener{
             case "Exit" :
                 exitGame();
                 break;
-            case "Menu" :
+            case "About" :
+                JOptionPane.showMessageDialog(frame, "Лапушкина Александра Р3169 2021г.");
                 break;
         }
     }
-
 }
