@@ -58,7 +58,16 @@ public class Game15 implements ActionListener{
         file.addSeparator();
         file.add(exitGame);
 
-        JMenu about = new JMenu("About");
+        JMenuItem about = new JMenuItem("About"){
+            @Override
+            public Dimension getMaximumSize() {
+                Dimension d1 = super.getPreferredSize();
+                Dimension d2 = super.getMaximumSize();
+                d2.width = d1.width;
+                return d2;
+            }
+        };
+
         about.setMnemonic(KeyEvent.VK_A);
 
         bar.add(file);
