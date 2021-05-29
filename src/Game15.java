@@ -12,6 +12,7 @@ import java.util.Collections;
 public class Game15 implements ActionListener{
     static int size = 300;
     ArrayList<JLabel> cells = new ArrayList<JLabel>();
+    int zero;
     JFrame frame = new JFrame();
     JPanel panel = new JPanel();
 
@@ -25,6 +26,8 @@ public class Game15 implements ActionListener{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.add(panel);
+        frame.addKeyListener(new MyKeyListener());
+        frame.addMouseListener(new MyMouseListener());
         drawMenu();
 
         for (int i = 0; i < 16; i++) { //Заполняем массив
@@ -58,16 +61,7 @@ public class Game15 implements ActionListener{
         file.addSeparator();
         file.add(exitGame);
 
-        JMenuItem about = new JMenuItem("About"){
-            @Override
-            public Dimension getMaximumSize() {
-                Dimension d1 = super.getPreferredSize();
-                Dimension d2 = super.getMaximumSize();
-                d2.width = d1.width;
-                return d2;
-            }
-        };
-
+        JMenu about = new JMenu("About");
         about.setMnemonic(KeyEvent.VK_A);
 
         bar.add(file);
@@ -75,7 +69,11 @@ public class Game15 implements ActionListener{
 
         newGame.addActionListener(this);
         exitGame.addActionListener(this);
-        about.addActionListener(this);
+        about.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JOptionPane.showMessageDialog(frame, "Лапушкина Александра Р3169 2021г.");
+            }
+        });
 
         frame.setJMenuBar(bar);
     }
@@ -86,7 +84,6 @@ public class Game15 implements ActionListener{
         GridLayout grid = new GridLayout(4, 4);
         panel.setLayout(grid);
         for (JLabel x: cells) {
-                JLabel label = new JLabel(x.getText(), SwingConstants.CENTER);
                 panel.add(x);
         }
     }
@@ -100,15 +97,21 @@ public class Game15 implements ActionListener{
             while (i < 15 && cells.get(i).getText() != "") {
                 i++;
             }
-            cells.get(i).setText(cells.get(15).getText());
-            cells.get(15).setText("");
+            swap(i, 15);
         }
+        zero = 15;
+    }
+
+    private void swap(int x, int y){
+        String temp = cells.get(x).getText();
+        cells.get(x).setText(cells.get(y).getText());
+        cells.get(y).setText(temp);
+        drawGrid();
     }
 
     //Начать иновую игру
     private void newGame() {
         shuffle();
-        drawGrid();
     }
 
     private void exitGame() { //перемешать массив
@@ -130,4 +133,89 @@ public class Game15 implements ActionListener{
                 break;
         }
     }
+
+    public class MyKeyListener implements KeyListener {
+
+        @Override
+        public void keyTyped(KeyEvent e) {
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            int key = e.getKeyCode();
+            switch(key){
+                case KeyEvent.VK_RIGHT:
+                    if (zero % 4 > 0) {
+                        int newZero = zero - 1;
+                        swap(zero, newZero);
+                        zero = newZero;
+                    }
+                    break;
+                case KeyEvent.VK_UP:
+                    if (zero / 4 < 3) {
+                        int newZero = zero + 4;
+                        swap(zero, newZero);
+                        zero = newZero;
+                    }
+                    break;
+                case KeyEvent.VK_LEFT:
+                    if (zero % 4 < 3) {
+                        int newZero = zero + 1;
+                        swap(zero, newZero);
+                        zero = newZero;
+                    }
+                    break;
+                case KeyEvent.VK_DOWN:
+                    if (zero / 4 > 0) {
+                        int newZero = zero - 4;
+                        swap(zero, newZero);
+                        zero = newZero;
+                    }
+                    break;
+            }
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+
+        }
+    }
+
+    public class MyMouseListener implements MouseListener {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            int x = e.getX() / cells.get(0).getWidth();
+            int y = (e.getY() - 50) /  cells.get(0).getHeight();
+
+            if (x == zero % 4 && Math.abs(y - zero / 4) == 1 || Math.abs(x - zero % 4) == 1 && y == zero / 4) {
+                int newZero = y * 4 + x;
+                swap(zero, newZero);
+                zero = newZero;
+            }
+
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+
+        }
+    }
+
 }
+
+
