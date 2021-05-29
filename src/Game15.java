@@ -1,9 +1,6 @@
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-import javax.swing.event.MenuDragMouseListener;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
-import javax.swing.event.MouseInputListener;
+import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -25,9 +22,9 @@ public class Game15 implements ActionListener{
         frame.setSize(size, size);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
-        frame.add(panel);
         frame.addKeyListener(new MyKeyListener());
-        frame.addMouseListener(new MyMouseListener());
+        panel.addMouseListener(new MyMouseListener());
+        frame.add(panel);
         drawMenu();
 
         for (int i = 0; i < 16; i++) { //Заполняем массив
@@ -72,6 +69,24 @@ public class Game15 implements ActionListener{
         about.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 JOptionPane.showMessageDialog(frame, "Лапушкина Александра Р3169 2021г.");
+            }
+        });
+        about.addMenuKeyListener(new MenuKeyListener() {
+            @Override
+            public void menuKeyTyped(MenuKeyEvent e) {
+               if (e.getKeyCode() == 0) {
+                   JOptionPane.showMessageDialog(frame, "Лапушкина Александра Р3169 2021г.");
+               }
+            }
+
+            @Override
+            public void menuKeyPressed(MenuKeyEvent e) {
+
+            }
+
+            @Override
+            public void menuKeyReleased(MenuKeyEvent e) {
+
             }
         });
 
@@ -184,8 +199,8 @@ public class Game15 implements ActionListener{
     public class MyMouseListener implements MouseListener {
         @Override
         public void mouseClicked(MouseEvent e) {
-            int x = e.getX() / cells.get(0).getWidth();
-            int y = (e.getY() - 50) /  cells.get(0).getHeight();
+            int x = e.getX() / (panel.getWidth() / 4);
+            int y = e.getY() / (panel.getHeight() / 4);
 
             if (x == zero % 4 && Math.abs(y - zero / 4) == 1 || Math.abs(x - zero % 4) == 1 && y == zero / 4) {
                 int newZero = y * 4 + x;
