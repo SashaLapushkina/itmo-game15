@@ -6,8 +6,8 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Game15 implements ActionListener {
-    private static int size = 400;
+public class Game15 {
+    private final int size = 400;
     private ArrayList<JLabel> cells = new ArrayList<>(); //Массив костей
     private int zero; //Позиция пустой кости
     private JFrame frame = new JFrame();
@@ -121,8 +121,8 @@ public class Game15 implements ActionListener {
         bar.add(about);
 
         //Вешаем слушатели на выпадающее меню
-        newGame.addActionListener(this);
-        exitGame.addActionListener(this);
+        newGame.addActionListener(e -> newGame());
+        exitGame.addActionListener(e -> System.exit(0));
 
         //Делаем кликабельным пункт About
         about.addMouseListener(new MouseAdapter() {
@@ -210,11 +210,6 @@ public class Game15 implements ActionListener {
         drawGrid();
     }
 
-    //Выйти
-    private void exitGame() {
-        System.exit(0);
-    }
-
     //Проверка, решена ли головоломка
     private boolean isSolved() {
         int i = 0;
@@ -222,19 +217,5 @@ public class Game15 implements ActionListener {
             i++;
         }
         return  i == 14;
-    }
-
-    //Реагирование на пункты меню
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        String command = e.getActionCommand();
-        switch (command) {
-            case "New":
-                newGame();
-                break;
-            case "Exit":
-                exitGame();
-                break;
-        }
     }
 }
