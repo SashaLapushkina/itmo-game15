@@ -180,9 +180,9 @@ public class Game15 {
             while (i < 15 && !cells.get(i).getText().equals("")) {
                 i++;
             }
-            swap(i, 15);
+            zero = i;
+            swapZero(15);
         }
-        zero = 15;
     }
 
     //Поменять местами две ячейки
