@@ -44,9 +44,8 @@ public class Game15 {
                 int y = e.getY() / (panel.getHeight() / 4);
 
                 if (x == zero % 4 && Math.abs(y - zero / 4) == 1 || Math.abs(x - zero % 4) == 1 && y == zero / 4) {
-                    int newZero = y * 4 + x;
-                    swap(zero, newZero);
-                    zero = newZero;
+                    swapZero(y * 4 + x);
+
                 }
 
             }
@@ -183,13 +182,6 @@ public class Game15 {
             zero = i;
             swapZero(15);
         }
-    }
-
-    //Поменять местами две ячейки
-    private void swap(int x, int y) {
-        String temp = cells.get(x).getText();
-        cells.get(x).setText(cells.get(y).getText());
-        cells.get(y).setText(temp);
     }
 
     //Поменять местами пустую ячейку с данной
