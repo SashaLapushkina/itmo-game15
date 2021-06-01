@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Game15 implements ActionListener {
-    static int size = 300;
-    ArrayList<JLabel> cells = new ArrayList<>(); //Массив костей
-    int zero; //Позиция пустой кости
-    JFrame frame = new JFrame();
-    JPanel panel = new JPanel();
+    private static int size = 400;
+    private ArrayList<JLabel> cells = new ArrayList<>(); //Массив костей
+    private int zero; //Позиция пустой кости
+    private JFrame frame = new JFrame();
+    private JPanel panel = new JPanel();
 
     public static void main(String[] args) {
         new Game15();
@@ -23,7 +23,6 @@ public class Game15 implements ActionListener {
         frame.setSize(size, size);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
-        frame.setVisible(true);
 
         //Отрисовываем меню
         drawMenu();
@@ -86,6 +85,8 @@ public class Game15 implements ActionListener {
 
         //Запускаем новую игру
         newGame();
+
+        frame.setVisible(true);
     }
 
     //Отображение меню
@@ -167,11 +168,6 @@ public class Game15 implements ActionListener {
         for (JLabel x : cells) {
             panel.add(x);
         }
-
-        //Проверяем, решена ли головоломка
-        if (isSolved()) {
-            JOptionPane.showMessageDialog(frame, "Ура! Пятнашка собрана!","Победа", JOptionPane.INFORMATION_MESSAGE);
-        }
     }
 
     //Перемешать элементы в массиве
@@ -201,6 +197,11 @@ public class Game15 implements ActionListener {
         cells.get(zero).setText(cells.get(x).getText());
         cells.get(x).setText("");
         zero = x;
+
+        //Проверяем, решена ли головоломка
+        if (isSolved()) {
+            JOptionPane.showMessageDialog(frame, "Ура! Пятнашка собрана!","Победа", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     //Начать иновую игру
